@@ -16,11 +16,11 @@ from aiogram.utils.exceptions import BotBlocked
 from config import TOKEN, admin_id, database_dir
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
-from db_cards import execute_query, create_connection, add_value, execute_read_query, rows_rows, get_photo_id, get_all_photo_paths, get_all_photo_names_ids, delete_value
+from db_cards import execute_query, create_connection, add_value, execute_read_query, rows_rows, get_photo_id, get_all_photo_paths, get_all_photo_names_ids, delete_value, create_table
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher(bot, storage=MemoryStorage())
-connection = create_connection(database_dir + "/cards.db")
+connection = create_connection(database_dir + "cards.db")
 
 
 class StateCards(StatesGroup):
@@ -69,6 +69,7 @@ async def get_card(message: types.Message):
 
 
 async def process_start_command(message: types.Message, state: FSMContext):
+    execute_query(connection, create_table())
     await message.answer("Привет!\nЧтобы получить случайную карту, нажми на кнопку снизу.", reply_markup=get_card_keyboard())
     await StateCards.take_card.set()
     # await message.answer(text=execute_read_query(connection, rows_rows()))
@@ -162,6 +163,7 @@ def inline_register_handlers_booking(dp: Dispatcher):
 
 
 inline_register_handlers_booking(dp)
-if __name__ == '__main__':
 
+if __name__ == '__main__':
+    execute_query(connection, create_table())
     executor.start_polling(dp)

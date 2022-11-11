@@ -49,6 +49,17 @@ def return_all():
     return q
 
 
+def create_table():
+    q = """
+    CREATE TABLE IF NOT EXISTS cards (
+        card_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+        path TEXT NOT NULL,
+        name TEXT NOT NULL,
+        description TEXT );
+    """
+    return q
+
+
 def rows_rows():
     q = """
     SELECT COUNT(*) from cards
